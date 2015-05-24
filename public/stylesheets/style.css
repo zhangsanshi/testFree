@@ -6,3 +6,16 @@ body {
 a {
   color: #00B7FF;
 }
+input,
+textarea
+{
+  width: 80%;
+  margin: 10px 0;
+}
+textarea {
+  line-height: 1.5;
+}
+input[type="button"] {
+  line-height: 24px;
+  height: 24px;
+}
