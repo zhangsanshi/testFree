@@ -1,17 +1,24 @@
 var express = require('express');
 var router = express.Router();
 
+var proxy = require('../util/proxy');
+
 router.get('/', function(req, res, next) {
-  res.render('index');
+    res.render('index');
 });
-//´úÀí·şÎñÆ÷ÇëÇó
+//ä»£ç†æœåŠ¡å™¨è¯·æ±‚
 router.get('/**', function(req, res, next) {
-    //ÁÙÊ±ÅĞ¶Ï×ÊÔ´ÇëÇóÂ·¾¶
-    if (req.url.indexOf('/h') == 0) {
-        res.render('proxy', { html: req.url });
+    //ä¸´æ—¶åˆ¤æ–­èµ„æºè¯·æ±‚è·¯å¾„
+    var url = req.url;
+    if (url.indexOf('/http') == 0) {
+        proxy(req, res, next, url.indexOf('/https') == -1);
+
+    } else {
+        res.end("done");
     }
 
 
 });
 
 module.exports = router;
+

@@ -1,5 +1,5 @@
 /**
- * ÈÕÖ¾ÅäÖÃÄ¿Â¼
+ * æ—¥å¿—é…ç½®ç›®å½•
  * Created by zhanglei on 2015/5/16.
  */
 var FileStreamRotator = require('file-stream-rotator');

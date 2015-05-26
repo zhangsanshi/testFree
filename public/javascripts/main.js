@@ -20,10 +20,10 @@ $(function () {
     $('#getTargetUrl').on('click', function () {
         var src = srcUrl.val();
         if (!validSrcUrl(src)) {
-            return alert("ÇëÊäÈë·ÃÎÊÁ´½Ó");
+            return alert("è¯·è¾“å…¥è®¿é—®é“¾æ¥");
         } else {
-            //Æ´½Óurl,getÇëÇó£¬ÓÃÓÚ´«²¥
-            var target = src + '?' + getRule(ruleSrc.val(), ruleTarget.val());
+            //æ‹¼æ¥url,getè¯·æ±‚ï¼Œç”¨äºä¼ æ’­
+            var target = window.location.href + src + '?' + getRule(ruleSrc.val(), ruleTarget.val());
             targetUrl.val(decodeURI(target));
             targetUrlA.attr('href', target);
         }
