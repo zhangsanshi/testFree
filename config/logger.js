@@ -7,14 +7,16 @@ var logger = require('morgan');
 var fs = require('fs');
 var path = require('path');
 
+//创建log路径
 var logDirectory = path.join(__dirname , '../log');
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
+//log日志配置
 var accessLogStream = FileStreamRotator.getStream({
     filename: path.join(logDirectory ,  '/access-%DATE%.log'),
     frequency: 'daily',
     verbose: false,
-    date_format: "YYYY-MM-DD"
+    date_format: "YYYYMMDD"
 });
 
 module.exports = function () {

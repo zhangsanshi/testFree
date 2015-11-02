@@ -2,37 +2,35 @@
  * Created by sanshi on 2015/5/26.
  */
 
-
-function replaceHtml(html, urlObj) {
-    var resourceUrl = urlObj.protocol + urlObj.hostname;
+//TODO 需要做二次处理
+function replaceHtml(html, proxyUrlParts) {
+    var resourceUrl = proxyUrlParts.protocol + proxyUrlParts.hostname;
     (function (query) {
-        var srcArr = query["src[]"],
-            targetArr = query["target[]"];
-        if (typeof  srcArr === 'string') {
-            srcArr = [srcArr];
+        var srcs = query["src"] || [],
+            targets = query["target"] || [];
+        if (typeof  srcs === 'string') {
+            srcs = [srcs];
         }
-        if (typeof  targetArr === 'string') {
-            targetArr = [targetArr];
+        if (typeof  targets === 'string') {
+            targets = [targets];
         }
-        console.log(targetArr, srcArr);
-        for (var i = 0, len = srcArr.length; i < len; i++) {
-            if (targetArr[i]) {
-                var target = targetArr[i];
-                var src = srcArr[i];
-                html = html.replace(new RegExp(src + '\?.*?"', 'g'), function (value) {
-                    var t = 't=' + new Date().getTime();
-                    var replace = value.replace(src, target);
-                    if (replace.indexOf('?') != -1) {
-                        replace = replace.replace('"', '&' + t + '"');
-                    } else {
-                        replace = replace.replace('"', '?' + t + '"');
-                    }
-                    return  replace;
-                });
-            }
+        console.log(targets, srcs);
+        for (var i = 0, len = srcs.length; i < len; i++) {
+            var target = targets[i] || '';
+            var src = srcs[i] || '';
+            html = html.replace(new RegExp(src + '\?.*?(?=")', 'g'), function (value) {
+                var t = 't=' + new Date().getTime();
+                var replace = value.replace(src, target);
+                if (replace.indexOf('?') != -1) {
+                    replace = replace + '&' + t;
+                } else {
+                    replace = replace + '?' + t;
+                }
+                return  replace;
+            });
         }
 
-    })(urlObj.query);
+    })(proxyUrlParts.query);
 
     (function () {
 
