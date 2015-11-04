@@ -3,10 +3,11 @@
  */
 
 var http = require('http');
+var https = require('https');
 var BufferHelper = require('bufferhelper');
 var httpProxy = require('http-proxy');
 var URL = require('url');
-var replaceHtml = require('./replaceHtml');
+var parseHtml = require('./parseHtml');
 
 function clearProxyUrl(proxyUrlParts) {
     var query = JSON.parse(JSON.stringify(proxyUrlParts.query));
@@ -21,29 +22,21 @@ function clearProxyUrl(proxyUrlParts) {
     });
 }
 
-var proxy = (function () {
-    var proxy = {
-        http: function (proxyUrlParts, req, res, next) {
-            var bufferHelper = new BufferHelper();
-            http.get(clearProxyUrl(proxyUrlParts), function (proxyRes) {
-                proxyRes.on('data', function (chunk) {
-                    bufferHelper.concat(chunk);
-                });
-                proxyRes.on('error',function(e){
-                    console.log("Got error: " + e.message);
-                });
-                proxyRes.on('end',function(e){
-                    var html = bufferHelper.toBuffer().toString();
-                    res.render('proxy', { html: replaceHtml(html, proxyUrlParts)});
-                });
-            });
-        },
-        https: function (proxyUrlParts, req, res, next) {
-
-        }
-    };
-    return proxy;
-})();
+var proxy = function (proxyServer, proxyUrlParts, req, res, next) {
+    var bufferHelper = new BufferHelper();
+    proxyServer.get(clearProxyUrl(proxyUrlParts), function (proxyRes) {
+        proxyRes.on('data', function (chunk) {
+            bufferHelper.concat(chunk);
+        });
+        proxyRes.on('error', function (e) {
+            console.log("Got error: " + e.message);
+        });
+        proxyRes.on('end', function (e) {
+            var html = bufferHelper.toBuffer().toString();
+            res.render('proxy', { html: parseHtml(html, proxyUrlParts)});
+        });
+    });
+};
 
 function parseProxyURL (url) {
     return URL.parse(url, true);
@@ -51,20 +44,20 @@ function parseProxyURL (url) {
 function getProxyProtocol (pathName) {
     var httpReg = /^http/,
         httpsReg = /^https/,
-        action = '';
+        proxyServer = '';
     if (httpsReg.test(pathName)) {
-        action = 'https';
+        proxyServer = https;
     } else if (httpReg.test(pathName)) {
-        action = 'http';
+        proxyServer = http;
     }
-    return action;
+    return proxyServer;
 }
 var Proxy = function (req, res, next) {
     var pathName = req.url.substring(1),
         proxyUrlParts = parseProxyURL(pathName, true),
-        action = getProxyProtocol(pathName);
-    if (action) {
-        proxy[action](proxyUrlParts, req, res, next);
+        proxyServer = getProxyProtocol(pathName);
+    if (proxyServer) {
+        proxy(proxyServer, proxyUrlParts, req, res, next);
     } else {
         res.end("请确认网址前缀为http或者https");
     }

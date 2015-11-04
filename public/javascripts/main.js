@@ -23,12 +23,16 @@ $(function () {
     $('#getTargetUrl').on('click', function () {
         var src = srcUrl.val(),
             srcParts = parseUrl(src);
-        if (!/^http/.test(srcParts.protocol)) {
+        if (!/^http/.test(src)) {
             return alert("请输入正确的访问链接以http或者https开头");
         } else {
             //拼接url,get请求，用于传播
-            var target = window.location.origin + '/' + src +
-                (srcParts.search ? '&' : '?') + getRule(ruleSrc.val(), ruleTarget.val());
+            if (srcParts.search) {
+                srcParts.search = srcParts.search + '&' + getRule(ruleSrc.val(), ruleTarget.val());
+            } else {
+                srcParts.search = srcParts.search + '?' + getRule(ruleSrc.val(), ruleTarget.val());
+            }
+            var target = window.location.origin + '/' + srcParts.href;
             targetUrl.val(decodeURI(target));
             targetUrlA.attr('href', target);
         }

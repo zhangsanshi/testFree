@@ -14,17 +14,19 @@ function replaceHtml(html, proxyUrlParts) {
         if (typeof  targets === 'string') {
             targets = [targets];
         }
-        console.log(targets, srcs);
         for (var i = 0, len = srcs.length; i < len; i++) {
-            var target = targets[i] || '';
-            var src = srcs[i] || '';
+            var target = targets[i] || '',
+                src = srcs[i];
+            if (!src) {
+                continue;
+            }
             html = html.replace(new RegExp(src + '\?.*?(?=")', 'g'), function (value) {
-                var t = 't=' + new Date().getTime();
-                var replace = value.replace(src, target);
+                var t = new Date().getTime(),
+                    replace = value.replace(src, target);
                 if (replace.indexOf('?') != -1) {
-                    replace = replace + '&' + t;
+                    replace = replace + '&t=' + t;
                 } else {
-                    replace = replace + '?' + t;
+                    replace = replace + '?t=' + t;
                 }
                 return  replace;
             });

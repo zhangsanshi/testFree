@@ -1,19 +1,20 @@
 extends layout
 block content
+  .wrap
     h3 请输入访问链接
     div
-      textarea(rows="3")#srcUrl
-    h3 请添加替换规则
+      textarea(rows="4")#srcUrl
+    h3 请添加替换规则(目前仅支持url替换)
     div
       h4 替换前(规则之间请换行)
-      textarea(rows="5")#ruleSrc
+      textarea(rows="8")#ruleSrc
     div
       h4 替换后(规则之间请换行，和替换前规则一一对应)
-      textarea(rows="5")#ruleTarget
+      textarea(rows="8")#ruleTarget
     div
       input(type="button", value="生成链接")#getTargetUrl
     div
       h3 生成目标链接
-      textarea(rows="3")#targetUrl
+      textarea(rows="4")#targetUrl
     div
       a(href="#",target="_blank")#targetUrlA 点击访问

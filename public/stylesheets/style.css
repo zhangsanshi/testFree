@@ -1,21 +1,34 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+* {
+    padding: 0;
+    margin: 0;
 }
-
+body {
+  font: 14px/1.5 "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+.wrap {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px 0;
+}
 a {
   color: #00B7FF;
 }
 input,
 textarea
 {
-  width: 80%;
+  width: 100%;
   margin: 10px 0;
-}
-textarea {
-  line-height: 1.5;
 }
 input[type="button"] {
   line-height: 24px;
   height: 24px;
+}
+h3 {
+    padding: 20px 0;
+}
+h4 {
+    padding: 5px 0;
+}
+#getTargetUrl {
+    height: 30px;
 }
